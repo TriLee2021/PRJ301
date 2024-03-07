@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Login Page</h1>
+        
+        <!--Login là Post-->
+        <!--Control nào ở trong form thì mới convert đc dữ liệu -->
+        <form action="DispatcherServlet" method="POST"><!--tạo view thì luôn chỉ vào bên trong thành phần điều phối-->
+            
+            Username <input type="text" name="txtUsername" value="" /> <br/>
+            Password <input type="password" name="txtPassword" value="" /> <br/>
+            <input type="submit" value="Login" name="btAction" />
+            
+            <!--Nút reset k cần đặt tên control vì nó ko phải là parameter-->
+            <input type="reset" value="Reset" />
+        </form>
+        <!--
+        khi mún cho file này chạy đầu tiên thì mình phải tick vào chỗ add
+        information in xml để nó tự tạo file xml, xong r nhớ vào file .xml ghi 
+        phần này vào thì sẽ chạy đầu tiên
+        <welcome-file-list>
+            <welcome-file>login.html</welcome-file>//tag này giữ nguyên ko nên 
+                                                        xuống hàng
+        </welcome-file-list>
+        -->
+    </body>
+</html>

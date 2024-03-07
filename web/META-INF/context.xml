@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/PracticePRJ2">
+    <Resource name="DS007" type="javax.sql.DataSource" auth="Container" 
+                driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                url="jdbc:sqlserver://localhost:1433;databaseName=PRJ301"
+                username="sa" password="123456"
+    />
+        <!-- định nghĩa datasource, nó tên gì nó kiểu dữ liệu gì và ai sẽ quản lý cuộc đời nó-->
+    
+</Context>
