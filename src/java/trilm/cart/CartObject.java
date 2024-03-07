@@ -20,10 +20,10 @@ public class CartObject implements Serializable{
         return items;
     }
     
-    public void addItemToCart(String id){
+    public boolean addItemToCart(String id){
         //1. check item's item is existed
         if(id == null){
-            return;
+            return false;
         }
         //2. when item is existed, checking existed items
         if(this.items == null){
@@ -36,6 +36,7 @@ public class CartObject implements Serializable{
         }
         //4. update items
         this.items.put(id, quantity);
+        return true;
     }
     
     public void removeItemFromCart(String id){

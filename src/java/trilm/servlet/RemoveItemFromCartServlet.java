@@ -7,6 +7,9 @@ package trilm.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,11 +22,8 @@ import trilm.cart.CartObject;
  *
  * @author minht
  */
-@WebServlet(name = "AddItemToCartServlet", urlPatterns = {"/AddItemToCartServlet"})
-public class AddItemToCartServlet extends HttpServlet {
-
-    private final String SHOPPING_PAGE = "onlineShopping.html";
-    private final String ERROR_PAGE = "errors.html";
+@WebServlet(name = "RemoveItemFromCartServlet", urlPatterns = {"/RemoveItemFromCartServlet"})
+public class RemoveItemFromCartServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,27 +37,32 @@ public class AddItemToCartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = ERROR_PAGE;
-
         try {
-            //1. Customer goes to cart place
-            HttpSession session = request.getSession();
-            //2. Customer takes a cart
-            CartObject cart = (CartObject) session.getAttribute("CART");
-            if (cart == null) {
-                cart = new CartObject();
-            }
-            //3. Customer takes item
-            String id = request.getParameter("cboBook");
-            //4. Customer drop items to cart
-            boolean result = cart.addItemToCart(id);
-            if (result) {
-                session.setAttribute("CART", cart);
-                url = SHOPPING_PAGE;
-            }
+            //1. Customer goes to his/her cart
+            HttpSession session = request.getSession(false);
+            if(session != null){
+                //2. Customer takes his/her cart
+                CartObject cart = (CartObject)session.getAttribute("CART");
+                if(cart != null){
+                    //3. Customer takes item
+                    Map<String, Integer> items = cart.getItems();
+                    if(items != null){
+                        //4. Get all selected items
+                        String[] removedItems = request.getParameterValues("chkItem");
+                        if(removedItems != null){
+                            //5. remove eah item from cart
+                            for (String item : removedItems) {
+                                cart.removeItemFromCart(item);
+                            }//end traverse each item
+                            session.setAttribute("CART", cart);
+                        }//end removedItem has choices
+                    }//end items have existed
+                }//end if cart has existed
+            }//session has existed
         } finally {
-            //5. Redirext to online shopping page
-            response.sendRedirect(url);
+            String urlRewriting = "DispatcherServlet"
+                                + "?btAction=View Your Cart";
+            response.sendRedirect(urlRewriting);
         }
     }
 

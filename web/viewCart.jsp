@@ -26,39 +26,59 @@
                     if (items != null) {
                         //4. show items
         %>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                <%
-                    int count = 0;
-                    for (String key : items.keySet()) {
-                %>
-                <tr>
-                    <td>
-                        <%= ++count%>
-                    </td>
-                    <td>
-                        <%= key%>
-                    </td>
-                    <td>
-                        <%= items.get(key)%>
-                    </td>
-                </tr>
-                <%
-                    }
-                %>
-            </tbody>
-        </table>
+        <form action="DispatcherServlet">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                        int count = 0;
+                        for (String key : items.keySet()) {
+                    %>
+                    <tr>
+                        <td>
+                            <%= ++count%>
+                        </td>
+                        <td>
+                            <%= key%>
+                        </td>
+                        <td>
+                            <%= items.get(key)%>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="chkItem" value="<%= key%>" /> 
+                        </td>
+                    </tr>
+                    <%
+                        }
+                    %>
+                    <tr>
+                        <td colspan="3">
+                            <a href="onlineShopping.html">Add more Items to Cart</a>
+                        </td>
+                        <td>
+                            <input type="submit" value="Remove Selected Items" name="btAction" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
         <%
+                        return;
                     }
                 }
             }
         %>
+        <h2>
+            <font color="red">
+            No cart exits!!!
+            </font>
+        </h2>
     </body>
 </html>

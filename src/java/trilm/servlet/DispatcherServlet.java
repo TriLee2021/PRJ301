@@ -26,7 +26,9 @@ public class DispatcherServlet extends HttpServlet {
     private final String DELETE_ACCOUNT_CONTROLLER = "DeleteServlet";
     private final String PROCESS_REQUEST_CONTROLLER = "ProcessRequestSevlet";
     private final String ADD_ITEM_TO_YOUR_CART = "AddItemToCartServlet";
+    private final String REMOVE_ITEM_FROM_CART_CONTROLLER = "RemoveItemFromCartServlet";
     private final String VIEW_YOUR_CART = "viewCart.jsp";
+    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -57,6 +59,8 @@ public class DispatcherServlet extends HttpServlet {
                 url = ADD_ITEM_TO_YOUR_CART;
             } else if (button.equals("View Your Cart")){
                 url = VIEW_YOUR_CART;
+            } else if (button.equals("Remove Selected Items")){
+                url = REMOVE_ITEM_FROM_CART_CONTROLLER;
             }
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
