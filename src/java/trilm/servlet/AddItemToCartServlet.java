@@ -7,25 +7,21 @@ package trilm.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import trilm.cart.CartObject;
 
 /**
  *
  * @author minht
  */
-@WebServlet(name = "DispatcherServlet", urlPatterns = {"/DispatcherServlet"})
-public class DispatcherServlet extends HttpServlet {
-    private final String LOGIN_PAGE = "login.html";
-    private final String LOGIN_CONTROLLER = "LoginServlet";
-    private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastNameServlet";
-    private final String DELETE_ACCOUNT_CONTROLLER = "DeleteServlet";
-    private final String PROCESS_REQUEST_CONTROLLER = "ProcessRequestSevlet";
-    private final String ADD_ITEM_TO_YOUR_CART = "AddItemToCartServlet";
+@WebServlet(name = "AddItemToCartServlet", urlPatterns = {"/AddItemToCartServlet"})
+public class AddItemToCartServlet extends HttpServlet {
+    private final String SHOPPING_PAGE = "onlineShopping";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,25 +35,22 @@ public class DispatcherServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        String url = LOGIN_PAGE;
-        //which button did user click?
-        String button = request.getParameter("btAction");//giá trị này là giá trị tất cả, phải copy 
         try {
-            if(button == null){
-                url = PROCESS_REQUEST_CONTROLLER;
-            }else if(button.equals("Login")){
-                url = LOGIN_CONTROLLER;
-            } else if(button.equals("Search")){
-                url = SEARCH_LASTNAME_CONTROLLER;
-            } else if (button.equals("Delete")){
-                url = DELETE_ACCOUNT_CONTROLLER;
-            } else if (button.equals("Add Item To Your Cart")){
-                url = ADD_ITEM_TO_YOUR_CART;
+            //1. Customer goes to cart place
+            HttpSession session = request.getSession();
+            //2. Customer takes a cart
+            CartObject cart = (CartObject) session.getAttribute("CART");
+            if (cart == null) {
+                cart = new CartObject();
             }
+            //3. Customer takes item
+            String id = request.getParameter("cboBook");
+            //4. Customer drop items to cart
+            cart.addItemToCart(id);
+            session.setAttribute("CART", cart);
+            
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            //5. Redirext to online shopping page
         }
     }
 

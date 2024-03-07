@@ -14,7 +14,17 @@ and open the template in the editor.
         <div>
             <h1>Book Store</h1>
             <form action="DispatcherServlet">
-                Choose your item
+                Choose your item <select name="cboBook">
+                    <option>Java</option>
+                    <option>OOP</option>
+                    <option>Servlet</option>
+                    <option>JSP</option>
+                    <option>Netbeans</option>
+                    <option>Javabeans</option>
+                    <option>JSTL</option>
+                </select>
+                <input type="submit" value="Add Item To Your Cart" name="btAction" />
+                <input type="submit" value="View Your Cart" name="btAction" />
             </form>
         </div>
     </body>
