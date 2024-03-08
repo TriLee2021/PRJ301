@@ -14,6 +14,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import trilm.users.UsersDAO;
 
 /**
@@ -23,7 +24,8 @@ import trilm.users.UsersDAO;
 public class LoginServlet extends HttpServlet {
 
     private final String INVALID_PAGE = "invalid.html";//tất cả những URL liên quan đến server ko đc nhúng ở bên trong thành phần lập trình theo dạng chuỗi mà tất cả phải define bằng biến hằng để lúc cần cập nhật thì dễ thay đổi, tên biến hằng tất cả phải viết bằng chữ in
-    private final String SEARCH_PAGE = "search.html";
+    //private final String SEARCH_PAGE = "search.html";
+    private final String SEARCH_PAGE = "search.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -58,11 +60,17 @@ public class LoginServlet extends HttpServlet {
             boolean result = dao.checkLogin(username, password);
 
             if (result) {
-                //add cookie to client using resObj
                 url = SEARCH_PAGE;
-                Cookie cookies = new Cookie(username, password);
-                cookies.setMaxAge(60*3);
-                response.addCookie(cookies);
+                HttpSession session = request.getSession();
+                session.setAttribute("USERNAME", username);
+                //get fullname from username via DAO
+                //session.setAttribute("FULLNAME", fullname);
+                
+                //add cookie to client using resObj
+//                url = SEARCH_PAGE;
+//                Cookie cookies = new Cookie(username, password);
+//                cookies.setMaxAge(60*3);
+//                response.addCookie(cookies);
             }//end if user and password are matched!!!
         }//end if user has click Login button
         catch (SQLException ex) {//mọi catch lỗi bắt ở đây, mình là người xử lý lỗi, chứ ko phải ai khác
