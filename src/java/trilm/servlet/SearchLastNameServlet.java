@@ -50,7 +50,7 @@ public class SearchLastNameServlet extends HttpServlet {//1 servlet chỉ làm �
                 //call DAO
                 UsersDAO dao = new UsersDAO();
                 
-                dao.SearchLastname(searchValue);
+                dao.searchLastname(searchValue);
                 List<UsersDTO> result = dao.getAccounts();//lấy kết quả search 
                 
                 request.setAttribute("SEARCH_RESULT", result);//send cho search.jsp theo dạng địa chỉ cho 

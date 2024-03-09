@@ -7,30 +7,22 @@ package trilm.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import trilm.users.UsersDAO;
 
 /**
  *
  * @author minht
  */
-@WebServlet(name = "DispatcherServlet", urlPatterns = {"/DispatcherServlet"})
-public class DispatcherServlet extends HttpServlet {
-
-    private final String LOGIN_PAGE = "login.html";
-    private final String LOGIN_CONTROLLER = "LoginServlet";
-    private final String SEARCH_LASTNAME_CONTROLLER = "SearchLastNameServlet";
-    private final String DELETE_ACCOUNT_CONTROLLER = "DeleteServlet";
-    private final String UPDATE_ACCOUNT_CONTROLLER = "UpdateServlet";
-    private final String PROCESS_REQUEST_CONTROLLER = "ProcessRequestSevlet";
-    private final String ADD_ITEM_TO_YOUR_CART = "AddItemToCartServlet";
-    private final String REMOVE_ITEM_FROM_CART_CONTROLLER = "RemoveItemFromCartServlet";
-    private final String CREATE_NEW_ACCONT_SERVLET = "CreateNewAccountServlet";
-    private final String VIEW_YOUR_CART = "viewCart.jsp";
+@WebServlet(name = "UpdateServlet", urlPatterns = {"/UpdateServlet"})
+public class UpdateServlet extends HttpServlet {
+    private final String ERROR_PAGE = "errors.html";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,36 +36,31 @@ public class DispatcherServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        //1. Get all parameter
+        String username = request.getParameter("txtUsername");
+        String password = request.getParameter("txtPassword");
+        boolean isAdmin = request.getParameter("chkAdmin").equals("ON") ? true : false;
+        
+        String lastSearchValue = request.getParameter("lastSearchValue");
+        String urlRewriting = ERROR_PAGE;   
 
-        String url = LOGIN_PAGE;
-        //which button did user click?
-        String button = request.getParameter("btAction");//giá trị này là giá trị tất cả, phải copy 
         try {
-            if (button == null) {
-                url = PROCESS_REQUEST_CONTROLLER;
-            } else if (button.equals("Login")) {
-                url = LOGIN_CONTROLLER;
-            } else if (button.equals("Search")) {
-                url = SEARCH_LASTNAME_CONTROLLER;
-            } else if (button.equals("Delete")) {
-                url = DELETE_ACCOUNT_CONTROLLER;
-            } else if (button.equals("Update")) {
-                url = UPDATE_ACCOUNT_CONTROLLER;
-            } else if (button.equals("Add Item To Your Cart")) {
-                url = ADD_ITEM_TO_YOUR_CART;
-            } else if (button.equals("View Your Cart")) {
-                url = VIEW_YOUR_CART;
-            } else if (button.equals("Remove Selected Items")) {
-                url = REMOVE_ITEM_FROM_CART_CONTROLLER;
-            } else if (button.equals("Create New Account")) {
-                url = CREATE_NEW_ACCONT_SERVLET;
+            UsersDAO dao = new UsersDAO();
+            boolean result = dao.updateAccount(username, password, isAdmin);
+
+            if (result) {
+                urlRewriting = "DispatcherServlet"
+                        + "?btAction=Search"
+                        + "&txtSearchValue=" + lastSearchValue;
             }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            response.sendRedirect(urlRewriting);
         }
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

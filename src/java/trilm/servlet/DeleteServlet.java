@@ -23,7 +23,7 @@ import trilm.users.UsersDAO;
 @WebServlet(name = "DeleteServlet", urlPatterns = {"/DeleteServlet"})
 public class DeleteServlet extends HttpServlet {
 
-    private final String ERROR_PAGE = "error.html";
+    private final String ERROR_PAGE = "errors.html";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,29 +37,30 @@ public class DeleteServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        String username = request.getParameter("username");
-        String searchValue= request.getParameter("lastSearchValue");
+        //1.get all parameter
+        String username = request.getParameter("pk");
+        String searchValue = request.getParameter("lastSearchValue");
         String url = ERROR_PAGE;
-
         try {
-            //1. Call DAO
+            //2. call Model
+            //2.1. new DAO object
             UsersDAO dao = new UsersDAO();
-            boolean result = dao.DeleteAccount(username);
-
+            //2.2. call method of DAO
+            boolean result = dao.deleteAccount(username);
+            //3. process result
             if (result) {
-                //call previous function again -- call search function
-                url = "DispatcherSevlet"
+                //call previous function again by using URL Rewriting Mechanism
+                url = "DispatcherServlet"
                         + "?btAction=Search"
                         + "&txtSearchValue=" + searchValue;
-            }//end if delete successfully
-        } catch (SQLException ex){
+            }//end delete is success
+        } catch (SQLException ex) {
             ex.printStackTrace();
-        } catch (NamingException ex){
+        } catch (NamingException ex) {
             ex.printStackTrace();
-        }
-        finally {
-            
+        } finally {
+            //cant use forward
+            response.sendRedirect(url);
         }
     }
 

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Create</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <h1>Registration</h1>
+            <form action="DispatcherServlet" method="POST">
+                Username* <input type="text" name="txtUsername" value="" /><br/><!--dấu "*" là bắt buộc người dùng phải nhập-->
+                Password* <input type="password" name="txtPassword" value="" /><br/>
+                Confirm* <input type="password" name="txtConfirm" value="" /><br/>
+                Full name<input type="text" name="txtFullname" value="" /><br/>
+                <input type="submit" value="Create New Account" name="btAction" /><br/>
+                <input type="reset" value="Reset" />
+            </form>
+        </div>
+    </body>
+</html>

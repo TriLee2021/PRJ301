@@ -68,7 +68,7 @@ public class UsersDAO implements Serializable {
         return accounts;
     }
 
-    public void SearchLastname(String searchValue)
+    public void searchLastname(String searchValue)
             throws NamingException, SQLException {
         Connection con = null;//tất cả phải khai báo
         PreparedStatement stm = null;
@@ -116,7 +116,7 @@ public class UsersDAO implements Serializable {
         }
     }
 
-    public boolean DeleteAccount(String username)
+    public boolean deleteAccount(String username)
             throws SQLException, NamingException {
         Connection con = null;//tất cả phải khai báo
         PreparedStatement stm = null;
@@ -142,7 +142,96 @@ public class UsersDAO implements Serializable {
             }//process when connection is existed
         } finally {
             //if (rs != null) {
-                //rs.close();
+            //rs.close();
+            //}
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();//khai báo trên r thì ở dưới nhớ đóng, khai báo theo chiều thuận
+            }
+        }
+        return result;
+    }
+
+    public boolean updateAccount(String username, String password, boolean role)
+            throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        boolean result = false;
+
+//        if (role == null || role.isEmpty()) {
+//            role = "0";
+//        }
+        try {
+            //1. connect db
+            con = DBHelper.getConnection();
+            if (con != null) {
+                //2. write sql command
+                String sql = "Update Users "
+                        + "Set password = ? "
+                        + ",isAdmin = ? "
+                        + "Where username = ?";
+                //3. create statement object
+                stm = con.prepareStatement(sql);
+                stm.setString(1, password);
+                stm.setBoolean(2, role);
+                stm.setString(3, username);
+                //4. execute statement to create result
+                int effectRows = stm.executeUpdate();
+                //5. process result
+                if (effectRows > 0) {
+                    result = true;
+                }//end accountList had not existed
+
+            }//end rs has not reached EOF
+        } // end connection has exited   
+        finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+    
+    public boolean createAccount(UsersDTO account)
+            throws SQLException, NamingException {
+        Connection con = null;//tất cả phải khai báo
+        PreparedStatement stm = null;
+        //ResultSet rs = null;//khi thực hiện các câu lệnh insert delete update, kết quả trả về là số dòng hiệu lực nên sẽ xóa result set
+        boolean result = false;
+
+        try {
+            //1.Connect Database
+            con = DBHelper.getConnection();
+            if (con != null) {
+                //2.Create SQL String
+                String sql = "Insert Into Users("
+                        + "username, password, lastname, isAdmin"
+                        + ") Values("
+                        + "?, ?, ?, ?"
+                        + ")";//nếu ghi "delete * from" thì nó sẽ ko phát sinh lỗi nhưng sẽ ko có dòng nào hiệu lực
+                //3.Create SQL Statement
+                stm = con.prepareStatement(sql);//khi tạo câu lệnh thì bao gồm luôn cả thiết lập tham số 
+                stm.setString(1, account.getUsername());
+                stm.setString(2, account.getPassword());
+                stm.setString(3, account.getFullname());
+                stm.setBoolean(4, account.isRole());
+               //có 2 dấu chấm "?" thì 2 tham số, ở DB thì đếm luôn bắt đầu từ 1, ko phải 0
+               
+                //4.Execute Query
+                int row = stm.executeUpdate();//viết code thực thi dựa trên Statement
+                //5.Process
+                if (row > 0) {
+                    result = true;
+                }
+            }//process when connection is existed
+        } finally {
+            //if (rs != null) {
+            //rs.close();
             //}
             if (stm != null) {
                 stm.close();

@@ -6,5 +6,4 @@
                 username="sa" password="123456"
     />
         <!-- định nghĩa datasource, nó tên gì nó kiểu dữ liệu gì và ai sẽ quản lý cuộc đời nó-->
-    
 </Context>
