@@ -17,7 +17,7 @@
     </head>
     <body>
         <font color="red"> 
-        Welcome, ${sessionScope.USERNAME} <!-- ko đc show username ở đây, phải show fullname -->
+        Welcome, ${sessionScope.USER_INFO.fullname} <!-- ko đc show username ở đây, phải show fullname -->
         </font> 
         <h1>Search Page</h1>
         <form name="btAction" action="DispatcherServlet">
@@ -55,8 +55,7 @@
                                     <input type="hidden" name="txtUsername" value="${dto.username}" />
                                 </td>
                                 <td>
-                                    ${dto.password}
-                                    <input type="hidden" name="txtPassword" value="${dto.password}" />
+                                    <input type="text" name="txtPassword" value="${dto.password}" />
                                 </td>
                                 <td>
                                     ${dto.fullname}

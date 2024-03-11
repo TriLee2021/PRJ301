@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import trilm.users.UsersDAO;
+import trilm.users.UsersDTO;
 
 /**
  *
@@ -51,9 +52,9 @@ public class ProcessRequestSevlet extends HttpServlet {
                     String password = cookie.getValue();
                     //4. call DAO to check authentication
                     UsersDAO dao = new UsersDAO();
-                    boolean result = dao.checkLogin(username, password);
+                    UsersDTO result = dao.checkLogin(username, password);
                     
-                    if(result){
+                    if(result != null){
                         url = SEARCH_PAGE;
                     }
                 }//end for traverse cookie

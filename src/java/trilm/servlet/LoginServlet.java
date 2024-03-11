@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import trilm.users.UsersDAO;
+import trilm.users.UsersDTO;
 
 /**
  *
@@ -44,6 +45,7 @@ public class LoginServlet extends HttpServlet {
         //PrintWriter out = response.getWriter();//Print Writter thực chất đang thực hiện hành động setValue, muốn setValue vào bên trong thành phần của HTML String thì dùng đối tượng tên là printWriter, lấy từ responseObject với phương thức getWriter(), out là thành phần để giúp đưa giá trị vào bên trong thành phần của responseObject - đưa nó trờ thành HTML String
         //bỏ luôn dòng này vì ko cần trình bày giao diện trên servlet
         
+        //1. Get all user's info
         String username = request.getParameter("txtUsername");//get theo name để lấy value, case sensitive, phải copy chỗ này chứ ko đc ghi tay, sai thì nullPonterException vì nó ko tồn tại
         String password = request.getParameter("txtPassword");
         String button = request.getParameter("btAction");
@@ -54,23 +56,29 @@ public class LoginServlet extends HttpServlet {
 //            System.out.println("User" + username + " _ password " + password + " _ button " + button);
             //if (button.equals("Login")) {//những chữ mà reference từ bên ngoài vào thì phải copy
             //điều phối thì chỉ xủ 7 lý chức năng thôi chứ ko cần biết 
-            
-            //1. Call Model/DAO
-            UsersDAO dao = new UsersDAO();
-            boolean result = dao.checkLogin(username, password);
 
-            if (result) {
-                url = SEARCH_PAGE;
-                HttpSession session = request.getSession();
-                session.setAttribute("USERNAME", username);
-                //get fullname from username via DAO
-                //session.setAttribute("FULLNAME", fullname);
-                
-                //add cookie to client using resObj
-//                url = SEARCH_PAGE;
-//                Cookie cookies = new Cookie(username, password);
-//                cookies.setMaxAge(60*3);
-//                response.addCookie(cookies);
+            
+            if (button.equals("Login")) {
+                //2. Call Model/DAO
+                //2.1. New dao
+                UsersDAO dao = new UsersDAO();
+                //2.2. Call method
+                UsersDTO result = dao.checkLogin(username, password);
+                //3. Process result
+                if (result != null) {
+                    url = SEARCH_PAGE;
+                    
+                    HttpSession session = request.getSession();
+                    //session.setAttribute("USERNAME", username);
+                    
+                    //get fullname from username via DAO
+                    session.setAttribute("USER_INFO", result);
+
+                    //add cookie to client using resObj
+                    Cookie cookies = new Cookie(username, password);
+                    cookies.setMaxAge(60 * 3);
+                    response.addCookie(cookies);
+                }
             }//end if user and password are matched!!!
         }//end if user has click Login button
         catch (SQLException ex) {//mọi catch lỗi bắt ở đây, mình là người xử lý lỗi, chứ ko phải ai khác

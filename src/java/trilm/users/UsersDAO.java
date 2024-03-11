@@ -23,19 +23,19 @@ public class UsersDAO implements Serializable {
 
     private List<UsersDTO> accounts; //là 1 đối tượng để đón nhận data ở bên dưới DB và mapping lên
 
-    public boolean checkLogin(String username, String password)//phương thức để access lấy dữ liệu từ databse
+    public UsersDTO checkLogin(String username, String password)//phương thức để access lấy dữ liệu từ databse
             throws SQLException, /*ClassNotFoundException*/ NamingException {
         Connection con = null;//tất cả phải khai báo
         PreparedStatement stm = null;
         ResultSet rs = null;
-        boolean result = false;
+        UsersDTO result = null;
 
         try {
             //1.Connect Database
             con = DBHelper.getConnection();
             if (con != null) {
                 //2.Create SQL String
-                String sql = "Select username "//phải có dấu cách, nếu ko có thì 
+                String sql = "Select lastname, isAdmin "//phải có dấu cách, nếu ko có thì 
                         + "FROM Users "
                         + "WHERE username = ? "
                         + "AND password = ?";
@@ -47,7 +47,9 @@ public class UsersDAO implements Serializable {
                 rs = stm.executeQuery();//viết code thực thi dựa trên Statement
                 //5.Process Result
                 if (rs.next()) {
-                    result = true;
+                    String fullname = rs.getString("lastname");
+                    boolean isAdmin = rs.getBoolean("isAdmin");
+                    result = new UsersDTO(username, null, fullname, isAdmin);
                 }
             }//process when connection is existed
         } finally {
